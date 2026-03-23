@@ -16,7 +16,7 @@ const INTER_UNIVERSITY_DELAY_MS  = 2000;
 class ScraperService {
 
     constructor(){
-        this.jobService = new JobService();
+        this.jobService = JobService;
     }
 
   async scrapeOne(universityId, existingJobId = null, options = {}) {

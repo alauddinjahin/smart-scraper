@@ -10,6 +10,7 @@ const { notFoundHandler, errorHandler } = require('./shared/errors/app.error');
 const { CLIENT_ORIGIN, NODE_ENV } = require('./shared/config/env');
 const jobRoutes        = require('./modules/job/routes/job.routes');
 const universityRoutes = require('./modules/university/routes/university.routes');
+const scrapeRoutes = require('./modules/scraper/routes/scraper.routes');
 
 function createApp(dependencies) {
 
@@ -64,6 +65,7 @@ function createApp(dependencies) {
 
     // --- Module routes ------------------------------------------------------------
     app.use('/api/universities', universityRoutes);
+    app.use('/api/scrape',       scrapeRoutes);
     app.use('/api/jobs', jobRoutes);
     // --- Error handlers -----------------------------------------------------------
     app.use(notFoundHandler);

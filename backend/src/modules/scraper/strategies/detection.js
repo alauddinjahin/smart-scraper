@@ -72,7 +72,7 @@ class StrategyDetection extends BaseStrategy {
         } catch (e) {
             const s = e.response?.status;
             if (s === 403 || s === 429) return ZENROWS_API_KEY ? 'zenrows' : 'puppeteer';
-            logger.warn(`[strategy]: probe failed: ${e.message} → puppeteer`);
+            logger.warn(`[strategy]: ${url} probe failed: ${e.message} → puppeteer`);
             return 'puppeteer';
         }
     }
