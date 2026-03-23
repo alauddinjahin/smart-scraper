@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model University {
+  id          Int            @id @default(autoincrement())
+  name        String
+  website     String         @unique
+  scrapeUrls  String[]       @default([])
+  location    String?
+  type        UniversityType @default(PRIVATE)
+  logoUrl     String?
+  description String?
+  scrapeable  Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  admission    AdmissionInfo?
+  tuitionFees  TuitionFee[]
+  eligibility  EligibilityCriteria?
+  scholarships Scholarship[]
+
+  scrapeJobs   ScrapeJob[]
+  scrapeConfig UniversityScrapeConfig?
+
+  @@map("universities")
+}
+
+enum UniversityType {
+  PUBLIC
+  PRIVATE
+}
+
+model AdmissionInfo {
+  id                  Int       @id @default(autoincrement())
+  universityId        Int       @unique
+  applicationDeadline String?
+  requirementsText    String?
+  intakeMonths        String?
+  applyUrl            String?
+  scrapedAt           DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@map("admission_info")
+}
+
+model TuitionFee {
+  id           Int       @id @default(autoincrement())
+  universityId Int
+  program      String
+  amountLocal  Float?
+  amountUSD    Float?
+  currency     String    @default("BDT")
+  period       String    @default("per semester")
+  scrapedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@map("tuition_fees")
+}
+
+model EligibilityCriteria {
+  id                Int       @id @default(autoincrement())
+  universityId      Int       @unique
+  minGPA            String?
+  languageReqs      String?
+  otherRequirements String?
+  scrapedAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@map("eligibility_criteria")
+}
+
+model Scholarship {
+  id           Int       @id @default(autoincrement())
+  universityId Int
+  name         String
+  amount       String?
+  eligibility  String?
+  deadline     String?
+  scrapedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@map("scholarships")
+}
+
+model ScrapeJob {
+  id             Int          @id @default(autoincrement())
+  universityId   Int
+  status         ScrapeStatus @default(PENDING)
+  strategy       String?      // axios | puppeteer | zenrows
+  attemptCount   Int          @default(0)
+  maxAttempts    Int          @default(3)
+  accuracyScore  Float?       // 0-100: percentage of fields successfully extracted
+  fieldsFound    Int          @default(0)
+  fieldsTotal    Int          @default(4)
+  retryEnabled   Boolean      @default(true)
+  retryOfJobId   Int?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  errorLog       String?
+  createdAt      DateTime     @default(now())
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@index([universityId])
+  @@index([status])
+  @@map("scrape_jobs")
+}
+
+enum ScrapeStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  RETRYING
+  SKIPPED
+}
+
+model UniversityScrapeConfig {
+  id           Int      @id @default(autoincrement())
+  universityId Int      @unique
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@map("university_scrape_configs")
+}
