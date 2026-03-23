@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const { notFoundHandler, errorHandler } = require('./shared/errors/app.error');
+const { CLIENT_ORIGIN, NODE_ENV } = require('./shared/config/env');
 
 function createApp(dependencies) {
 
@@ -15,7 +16,7 @@ function createApp(dependencies) {
     // --- Security ---------------------------------------------------------------
     app.use(helmet());
     app.use(cors({
-        origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+        origin: CLIENT_ORIGIN,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }));
 
@@ -37,7 +38,7 @@ function createApp(dependencies) {
     }));
 
     // --- Parsing -----------------------------------------------------------------
-    if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
+    if (NODE_ENV !== 'test') app.use(morgan('dev'));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
@@ -54,7 +55,7 @@ function createApp(dependencies) {
             status: 'ok',
             ts: new Date().toISOString(),
             uptime: process.uptime(),
-            env: process.env.NODE_ENV,
+            env: NODE_ENV,
             version: '1.0.0',
         })
     );
