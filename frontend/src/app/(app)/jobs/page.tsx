@@ -35,7 +35,7 @@ export default function JobsPage() {
   const TD = 'px-4 py-3 text-sm border-b border-[var(--border)]';
 
   return (
-    <div className="py-8 px-4 max-w-7xl mx-auto">
+    <div className="py-8 px-4 lg:px-8 w-full">
 
       {/* Header */}
       <div className="flex items-start justify-between mb-6">

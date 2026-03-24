@@ -197,8 +197,8 @@ export default async function UniversityDetailPage({ params }: PageProps) {
   const latestJob = uni.scrapeJobs?.[0];
 
   return (
-    <div className="py-8 px-4 max-w-7xl mx-auto">
-
+    <div className=" py-8 px-4 lg:px-8 w-full">
+  
       {/* Breadcrumb */}
       <nav
         className="flex items-center gap-1.5 text-xs mb-6"

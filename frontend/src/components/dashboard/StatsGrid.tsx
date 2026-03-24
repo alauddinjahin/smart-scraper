@@ -116,8 +116,12 @@ export default function StatsGrid({ stats }: StatsGridProps) {
   return (
     <div
       ref={gridRef}
-      className="grid gap-4"
-      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' }}
+      className="grid gap-4 
+      grid-cols-1 
+      sm:grid-cols-2 
+      md:grid-cols-3 
+      lg:grid-cols-4"
+      // style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(calc(80%/4), 1fr))' }}
     >
       {cards.map((c, i) => (
         <StatCard key={c.label} {...c} index={i} />

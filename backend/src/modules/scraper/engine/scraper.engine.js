@@ -711,7 +711,7 @@ class ScraperEngine {
   _validate(result) {
     // Dedup tuition fees
     const seen = new Set();
-    result.tuitionFees = result.tuitionFees.filter(f => {
+    result.tuitionFees = result?.tuitionFees.filter(f => {
       const k = `${(f.program || '').toLowerCase().trim()}:${f.amountLocal}`;
       if (seen.has(k)) return false;
       seen.add(k);
@@ -719,13 +719,13 @@ class ScraperEngine {
     });
 
     if (result.eligibility?.otherRequirements) {
-      const c = result.eligibility.otherRequirements.replace(/\s+/g, ' ').trim();
+      const c = result.eligibility.otherRequirements?.replace(/\s+/g, ' ').trim();
       const hasEligWord = /gpa|cgpa|ssc|hsc|o level|a level|degree|diploma|bachelor|master|minimum|equivalent|grade|result|score|qualification|passing/i.test(c);
       result.eligibility.otherRequirements = (c.length > 30 && hasEligWord && !this._isNavContent(c)) ? c : null;
     }
 
     if (result.eligibility?.languageReqs) {
-      const c = result.eligibility.languageReqs.replace(/\s+/g, ' ').trim();
+      const c = result.eligibility.languageReqs?.replace(/\s+/g, ' ').trim();
       const isRealLang = /IELTS|TOEFL|TOEIC|GMAT|GRE|SAT|Duolingo|\d|band|score|proficiency|medium/i.test(c);
       result.eligibility.languageReqs = (c.length > 5 && isRealLang) ? c : null;
     }
@@ -738,7 +738,7 @@ class ScraperEngine {
       }
     }
 
-    result.scholarships = result.scholarships.filter(s => {
+    result.scholarships = result?.scholarships.filter(s => {
       if (!s.name || s.name.length < 5) return false;
       if (BAD_NAMES.test(s.name.trim())) return false;
       if (this._isNavContent(s.name)) return false;
@@ -754,13 +754,13 @@ class ScraperEngine {
       return true;
     });
 
-    if (result.eligibility) {
+    if (result?.eligibility) {
       const gpa = result.eligibility.minGPA;
       if (gpa !== null && gpa !== undefined && typeof gpa !== 'string') {
         result.eligibility.minGPA = String(gpa);
       }
     }
-    if (result.admission) {
+    if (result?.admission) {
       const im = result.admission.intakeMonths;
       if (Array.isArray(im)) {
         result.admission.intakeMonths = im.filter(Boolean).join(', ') || null;

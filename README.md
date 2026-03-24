@@ -25,7 +25,7 @@ A full-stack application designed to automatically scrape and aggregate universi
 - **Dashboard Analytics**: Statistics and recent activity overview
 
 ### Dashboard
-![Dashboard Stats](docs/dashboard.JPG)
+![Dashboard Stats](docs/dashboard-scraping-succes-rate.JPG)
 
 ---
 

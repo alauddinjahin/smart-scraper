@@ -56,10 +56,10 @@ function JobsSkeleton() {
 
 export default function DashboardPage() {
   return (
-    <div className="py-8 px-4 max-w-7xl mx-auto">
+    <div className="py-8 px-4 lg:px-8 w-full">
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-8">
         <div>
           <h1
             className="text-2xl font-semibold"

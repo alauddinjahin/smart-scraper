@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/Toast';
 import { useJobPoller } from '@/lib/hooks/useJob';
 import { useTriggerScrape, useTriggerScrapeAll } from '@/lib/hooks/useUniversities';
 import { useSWRConfig } from 'swr';
+import { useRouter } from 'next/navigation';
 
 const ACTIVE_STATUSES = ['PENDING', 'RUNNING', 'RETRYING'];
 
@@ -19,10 +20,12 @@ interface ScrapeButtonProps {
 export function ScrapeOneButton({ universityId, onComplete, size = 'sm' }: ScrapeButtonProps) {
   const [jobId, setJobId] = useState<number | null>(null);
   const [done,  setDone]  = useState(false);
+  
 
   const { trigger, isMutating } = useTriggerScrape();
   const { mutate }              = useSWRConfig();
   const toast                   = useToast();
+  const router = useRouter();
 
   const { data: jobData, error: pollError } = useJobPoller(jobId);
   const status = jobData?.data?.status;
@@ -44,6 +47,9 @@ export function ScrapeOneButton({ universityId, onComplete, size = 'sm' }: Scrap
         { revalidate: true }
       );
       onComplete?.();
+
+      router.refresh();
+      
     }
 
     if (status === 'FAILED') {
