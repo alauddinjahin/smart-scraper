@@ -24,6 +24,9 @@ A full-stack application designed to automatically scrape and aggregate universi
 - **Job History**: Complete audit trail of all scraping operations
 - **Dashboard Analytics**: Statistics and recent activity overview
 
+### Dashboard
+![Dashboard Stats](docs/dashboard.JPG)
+
 ---
 
 ## Architecture
@@ -44,6 +47,12 @@ This is a full-stack TypeScript application with a robust scraping engine and in
 - **Styling**: Tailwind CSS with custom design tokens
 - **State Management**: SWR for data fetching and real-time polling
 - **UI Components**: Custom component library with accessibility features
+
+### Engine Architecture
+![Engine Architecture](docs/scaper-engine.JPG)
+
+### Scraping Output
+![Scraping Output](docs/scraping-details.png)
 
 ---
 
