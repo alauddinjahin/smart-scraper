@@ -20,6 +20,7 @@ const { USER_AGENTS, PERIOD_MAP, GARBAGE_PATTERNS, DEFAULT_SELECTORS, RX, schola
 const { llmExtractPrompts, visionExtractPrompts } = require('../utils/prompts');
 const StrategyDetection = require('../strategies/detection');
 const StrategyFetch = require('../strategies/fetch');
+const llmDetection = require('../strategies/llm.client');
 
 const randomUA = () => USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
 
@@ -652,7 +653,7 @@ class ScraperEngine {
       .trim()
       .slice(0, 12000);
 
-    const { client, model } = makeLlmClient();
+    const { client, model } = llmDetection.makeLlmClient();
 
     const res = await client.chat.completions.create({
       model,
@@ -678,7 +679,7 @@ class ScraperEngine {
 
   // Vision extraction 
   async _visionExtract(buffer, mimeType) {
-    const { client, model } = makeLlmClient();
+    const { client, model } = llmDetection.makeLlmClient();
     logger.info(`[vision]: Processing ${mimeType}`);
 
     const res = await client.chat.completions.create({

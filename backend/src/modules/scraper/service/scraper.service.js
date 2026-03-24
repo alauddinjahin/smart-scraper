@@ -131,7 +131,7 @@ class ScraperService {
       }
 
       // Persist scraped data
-      const sanitised = _sanitiseScrapedData(scrapedData);
+      const sanitised = this._sanitiseScrapedData(scrapedData);
       await universityRepo.upsertScrapedData(university.id, sanitised);
 
       const usedStrategy = scrapedData._strategy

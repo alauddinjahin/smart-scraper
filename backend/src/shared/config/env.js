@@ -8,6 +8,7 @@ const env = {
   PORT:            parseInt(process.env.PORT)  || 4000,
   DATABASE_URL:    process.env.DATABASE_URL,
   CLIENT_ORIGIN:   process.env.CLIENT_ORIGIN  || 'http://localhost:3000',
+  OPENROUTER_BASE_URL:   process.env.OPENROUTER_BASE_URL  || 'https://openrouter.ai/api/v1',
   OPENROUTER_API_KEY:  process.env.OPENROUTER_API_KEY  || null,
   OPENAI_API_KEY:  process.env.OPENAI_API_KEY  || null,
   ZENROWS_API_KEY: process.env.ZENROWS_API_KEY || null,
