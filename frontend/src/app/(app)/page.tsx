@@ -8,8 +8,10 @@ import RecentJobs from '@/components/dashboard/RecentJobs';
 import { Skeleton, TableRowSkeleton } from '@/components/ui/Skeleton';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import ScrapeAllButton from '@/components/university/ScrapeButton';
+import ScraperAllButtonWraper from '@/components/dashboard/ScraperAllButtonWraper';
 
 export const metadata: Metadata = { title: 'Dashboard' };
+export const dynamic = 'force-dynamic';
 
 async function StatsSection() {
   const { data } = await getDashboardStats();
@@ -85,6 +87,7 @@ export default function DashboardPage() {
             <ArrowRight size={14} />
           </Link>
           <ScrapeAllButton />
+          {/* <ScraperAllButtonWraper /> */}
         </div>
       </div>
 

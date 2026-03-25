@@ -8,6 +8,7 @@ import { useJobPoller } from '@/lib/hooks/useJob';
 import { useTriggerScrape, useTriggerScrapeAll } from '@/lib/hooks/useUniversities';
 import { useSWRConfig } from 'swr';
 import { useRouter } from 'next/navigation';
+import { revalidateDashboard, revalidateUniversity } from '@/app/actions/revalidate';
 
 const ACTIVE_STATUSES = ['PENDING', 'RUNNING', 'RETRYING'];
 
@@ -37,18 +38,26 @@ export function ScrapeOneButton({ universityId, onComplete, size = 'sm' }: Scrap
       setDone(true);
       setJobId(null);
       toast.success('Scrape completed successfully!');
-      mutate(
-        (key: string) =>
-          typeof key === 'string' &&
-          (key.includes(`/universities/${universityId}`) ||
-           key.includes('/universities?') ||
-           key.includes('/universities/stats')),
-        undefined,
-        { revalidate: true }
-      );
-      onComplete?.();
 
-      router.refresh();
+      const handleCompleted = async () =>{
+        mutate(
+          (key: string) =>
+            typeof key === 'string' &&
+            (key.includes(`/universities/${universityId}`) ||
+            key.includes('/universities?') ||
+            key.includes('/universities/stats')),
+          undefined,
+          { revalidate: true }
+        );
+        onComplete?.();
+
+        await revalidateUniversity(universityId);
+        router.refresh();
+      }
+
+      handleCompleted();
+      
+      
       
     }
 
@@ -96,14 +105,37 @@ export function ScrapeOneButton({ universityId, onComplete, size = 'sm' }: Scrap
   );
 }
 
-export default function ScrapeAllButton() {
+
+interface ScrapeAllButtonProps {
+  onComplete?: () => void; // ← add this
+}
+
+export default function ScrapeAllButton({ onComplete }: ScrapeAllButtonProps) {
   const { trigger, isMutating } = useTriggerScrapeAll();
   const toast = useToast();
-
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+  
   const handleAll = async () => {
     try {
       await trigger();
       toast.success('Bulk scrape queued. Jobs are running in the background.');
+
+       // Revalidate SWR client cache
+      mutate(
+        (key: string) =>
+          typeof key === 'string' &&
+          (key.includes('/universities?') ||
+            key.includes('/universities/stats')),
+        undefined,
+        { revalidate: true }
+      );
+
+      await revalidateDashboard();
+      router.refresh();
+      
+      onComplete?.(); 
+
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to trigger bulk scrape');
     }

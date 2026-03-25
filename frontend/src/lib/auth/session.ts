@@ -1,17 +1,7 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Auth Session Helpers (Server-side only)
-//
-// Uses Next.js cookies() / headers() from next/headers.
-// Called only from Server Components, Route Handlers, and middleware.
-// ─────────────────────────────────────────────────────────────────────────────
 
 import { cookies } from 'next/headers';
 import type { Session, User } from './config';
 import { SESSION_COOKIE, SESSION_TTL_MS, MOCK_USERS } from './config';
-
-// ── Encode / decode session ───────────────────────────────────────────────────
-// Using base64 JSON — simple for mock auth.
-// Real implementation: sign with a secret using jose or iron-session.
 
 function encode(session: Session): string {
   return Buffer.from(JSON.stringify(session)).toString('base64');
@@ -27,7 +17,6 @@ function decode(raw: string): Session | null {
   }
 }
 
-// ── Read session from cookie ──────────────────────────────────────────────────
 export async function getSession(): Promise<Session | null> {
   try {
     const cookieStore = cookies();
@@ -46,17 +35,14 @@ export async function getSession(): Promise<Session | null> {
   }
 }
 
-// ── Get current user (throws if not authenticated) ────────────────────────────
 export async function requireUser(): Promise<User> {
   const session = await getSession();
   if (!session) {
-    // Will be caught by the caller (Server Component or Route Handler)
     throw new Error('UNAUTHENTICATED');
   }
   return session.user;
 }
 
-// ── Validate credentials against mock store ───────────────────────────────────
 export function validateCredentials(
   email: string,
   password: string
@@ -74,7 +60,6 @@ export function validateCredentials(
   return user;
 }
 
-// ── Create session value (for route handler to set as cookie) ─────────────────
 export function createSessionValue(user: User): string {
   const session: Session = {
     user,

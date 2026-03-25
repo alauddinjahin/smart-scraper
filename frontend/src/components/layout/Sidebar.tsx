@@ -26,27 +26,10 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  {
-    href: '/universities',
-    label: 'Universities',
-    icon: Building2,
-    children: [
-      { href: '/universities', label: 'All Universities', icon: Building2 },
-      { href: '/universities/search', label: 'Search', icon: Building2 },
-      { href: '/universities/favorites', label: 'Favorites', icon: Building2 },
-    ],
-  },
-  {
-    href: '/jobs',
-    label: 'Scrape Jobs',
-    icon: Cpu,
-    children: [
-      { href: '/jobs', label: 'Active Jobs', icon: Cpu },
-      { href: '/jobs/history', label: 'History', icon: Cpu },
-      { href: '/jobs/analytics', label: 'Analytics', icon: Cpu },
-    ],
-  },
+  { href: '/universities', label: 'All Universities', icon: Building2 },
+  { href: '/jobs', label: 'Scrape Jobs', icon: Cpu },
 ];
+
 
 export default function Sidebar() {
   const pathname = usePathname();
