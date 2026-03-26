@@ -22,15 +22,21 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 WORKDIR /app
 
-# Copy package files first (caching)
+# Copy package files and Prisma schema first (so we can generate client)
 COPY package*.json ./
-RUN npm install
+COPY prisma ./prisma
 
-# Generate Prisma client
+# Install dependencies, but skip the postinstall script (we'll generate manually)
+RUN npm install --omit=optional --ignore-scripts
+
+# Generate Prisma client (requires the schema we just copied)
 RUN npx prisma generate
 
-# Copy the rest of the application
+# Copy the rest of the application source
 COPY . .
 
+# Expose the port your app uses
 EXPOSE 3000
-CMD ["npm", "start"]
+
+# Start the app, but first run database migrations
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
