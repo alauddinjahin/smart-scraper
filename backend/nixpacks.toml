@@ -1,2 +1,5 @@
+[phases.setup]
+env = { PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true", PUPPETEER_EXECUTABLE_PATH = "/usr/bin/chromium" }
+
 [phases.install]
 cmds = ["npm install", "npx prisma generate"]
