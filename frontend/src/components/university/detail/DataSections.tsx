@@ -3,7 +3,7 @@ import type { AdmissionInfo, TuitionFee, EligibilityCriteria, Scholarship } from
 
 function Section({ title, children, empty }: {
   title:    string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   empty?:   string;
 }) {
   return (
