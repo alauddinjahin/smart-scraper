@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "build": "prisma generate",
+    "postinstall": "prisma generate && prisma migrate deploy",
     "test": "jest --runInBand --forceExit --coverage",
     "test:unit": "jest --testPathPattern=unit --coverage",
     "test:integration": "jest --testPathPattern=integration --runInBand",
     "lint": "eslint src --ext .js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "node prisma/seed.js",
     "prisma:reset": "prisma migrate reset --force && node prisma/seed.js",
     "prisma:studio": "prisma studio"
