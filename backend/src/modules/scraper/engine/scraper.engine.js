@@ -1,16 +1,5 @@
 'use strict';
 
-/**
- * ScraperEngine — Universal Multi-Layer Data Extraction Engine
- *
- * Architecture:
- *   Layer 1: Fetch    - auto-detects strategy per domain
- *   Layer 2: Parse    - routes by file type (HTML/PDF/DOCX/Image)
- *   Layer 3: Extract  - DOM --> Regex --> LLM --> Vision (stops when complete)
- *   Layer 4: Validate - dedup, clean, normalise
- *   Layer 5: Heal     - saves discovered selectors to DB
- */
-
 const axios = require('axios');
 const cheerio = require('cheerio');
 const path = require('path');
@@ -83,7 +72,7 @@ class ScraperEngine {
     const fileType = this._fileType(url);
     let rawContent;
 
-    if (fileType === 'html') {
+    if (fileType === 'html2') {
       const strategy = await this.strategyDetection.resolveStrategy(url, universityId);
       rawContent = await this._fetchHtml(url, strategy);
 
@@ -223,7 +212,7 @@ class ScraperEngine {
 
   async _parseDocx(buffer) {
     try {
-      const mammoth = require('mammoth');
+      const mammoth = require('mammot');
       const { value } = await mammoth.extractRawText({ buffer });
       return value;
     } catch (e) { logger.warn(`[docx] ${e.message}`); return ''; }
@@ -280,7 +269,7 @@ class ScraperEngine {
         if (!result.admission.requirementsText && text.length > 50) {
           const hasAdmissionKeyword = /admission|require|eligib|applicant|apply|enroll|qualification|deadline|intake|semester|program/i.test(text);
           if (hasAdmissionKeyword && !this._isNavContent(text)) {
-            result.admission.requirementsText = text.slice(0, 800);
+            result.requirementsText = text.slice(0, 800);
             found = true;
           }
         }
